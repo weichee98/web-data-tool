@@ -4,9 +4,7 @@
 
 ## Installation
 
-1. Follow the steps [here](
-https://devcenter.heroku.com/articles/getting-started-with-python#set-up
-) to set up Heroku CLI.
+1. Follow the steps [here](https://devcenter.heroku.com/articles/getting-started-with-python#set-up) to set up Heroku CLI.
    
    To update Heroku CLI, run the following command.
 
@@ -37,8 +35,14 @@ https://devcenter.heroku.com/articles/getting-started-with-python#set-up
 
 ## References
 
-1. [Getting Started on Heroku with Node.js](
-   https://devcenter.heroku.com/articles/getting-started-with-nodejs
-   )
+1. [Getting Started on Heroku with Node.js](https://devcenter.heroku.com/articles/getting-started-with-nodejs)
 
 2. [Heroku Buildpack for create-react-app](https://elements.heroku.com/buildpacks/nhutphuongit/create-react-app-buildpack)
+
+3. [Using Bootstrap with React](https://blog.logrocket.com/how-to-use-bootstrap-with-react-a354715d1121/)
+
+4. [React Plotly.js in JavaScript](https://github.com/plotly/react-plotly.js/)
+
+5. [dataframe-js](https://gmousse.gitbooks.io/dataframe-js/content/#presentation)
+
+6. [Nodejs SQL Parser](https://github.com/taozhi8833998/node-sql-parser)
