@@ -1,4 +1,4 @@
-# Data Visualization Tool
+# Web Data Tool
 
  A web application that can be used to visualize data provided by client / user as several different plots.
 
