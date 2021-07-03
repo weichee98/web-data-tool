@@ -1,9 +1,10 @@
 import React from "react";
+import DataPanel from "../components/DataPanel";
 
 function Visualize() {
   return (
     <div className="visualize">
-      <div className="container">Visualize</div>
+      <DataPanel panelHeight="30rem"></DataPanel>
     </div>
   );
 }
