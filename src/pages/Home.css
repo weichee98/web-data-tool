@@ -1,0 +1,44 @@
+.home {
+    display: flex;
+    flex-flow: column;
+    height: 100%;
+}
+
+.main-menu-title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    background-size: cover;
+    background-position: center;
+    flex: 1 1 auto;
+}
+
+.index-content {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    justify-content: center;
+}
+
+.main-menu, .main-menu-button {
+    height: 100%;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+.main-menu-button:hover {
+    opacity: 0.8;
+    transition: .3s ease;
+}
+
+.main-menu-button h2 {
+    margin: 2.5rem;
+}
+
+.main-menu-button p {
+    padding-left: 5rem; 
+    padding-right: 5rem; 
+    text-align: justify;
+}

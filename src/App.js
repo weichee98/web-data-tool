@@ -4,7 +4,7 @@ import { Home, Visualize, Process } from "./pages";
 
 function App() {
   return (
-    <div className="App" style={{ textAlign: "center" }}>
+    <div className="App" style={{ textAlign: "center", height: "100%" }}>
       <Router>
         <Switch>
           <Route path="/" exact component={() => <Home></Home>}></Route>
