@@ -127,7 +127,7 @@ class TSVTab extends Component {
     var df = new DataFrame(arr.slice(1, arr.length), columns);
     var col_dtypes = {};
     columns.forEach((c_name) => {
-      var dtype = DTypes.checkArrayDtype(this.DF.toArray(c_name));
+      var dtype = DTypes.checkArrayDtype(df.toArray(c_name));
       col_dtypes[c_name] = dtype;
     });
     return { df: df, col_dtypes: col_dtypes };
@@ -222,7 +222,7 @@ class InputPanel extends Component {
               ></CSVTab>
               <TSVTab
                 label="TSV"
-                onLoading={this.props.onLoading}
+                onLoading={this.onInputLoading}
                 onError={this.props.onError}
                 onChange={this.onInputChange}
               ></TSVTab>
