@@ -51,32 +51,32 @@ class DTypes {
   }
 
   static dtype(value) {
-    if (typeof value != this.NUMBER) {
-      if (typeof value == this.STRING) {
+    if (typeof value != DTypes.NUMBER) {
+      if (typeof value == DTypes.STRING) {
         if (!isNaN(Date.parse(value))) {
-          return this.DATE;
+          return DTypes.DATE;
         }
-        return this.STRING;
+        return DTypes.STRING;
       }
       if (value instanceof Date) {
-        return this.DATE;
+        return DTypes.DATE;
       }
       return typeof value;
     }
     if (isNaN(value)) {
-      return this.UNDEFINED;
+      return DTypes.UNDEFINED;
     }
     if (value % 1 === 0) {
-      return this.INTEGER;
+      return DTypes.INTEGER;
     }
-    return this.FLOAT;
+    return DTypes.FLOAT;
   }
 
   static checkArrayDtype(arr) {
-    var final_type = this.UNDEFINED;
+    var final_type = DTypes.UNDEFINED;
     var elem_type;
     arr.forEach((elem) => {
-      elem_type = this.dtype(elem);
+      elem_type = DTypes.dtype(elem);
       final_type = _max(final_type, elem_type);
     });
     return final_type;

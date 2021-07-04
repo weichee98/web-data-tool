@@ -1,7 +1,10 @@
 import "./Visualize.css";
+import bgImage from "./img/visualize-bg.jpg";
 import React, { Component } from "react";
-import DataPanel from "../components/DataPanel";
+import Navigation from "../components/Navigation";
+import Header from "../components/Header";
 import InputPanel from "../components/InputPanel";
+import DataPanel from "../components/DataPanel";
 
 class Visualize extends Component {
   constructor(props) {
@@ -29,27 +32,11 @@ class Visualize extends Component {
   render() {
     return (
       <div className="visualize">
-        <nav className="navbar navbar-expand-lg navbar-dark main-navbar">
-          <div className="navbar-nav">
-            <a className="navbar-item nav-link" href="/">
-              Home
-            </a>
-            <a className="navbar-item nav-link" href="/process">
-              Process
-            </a>
-            <a className="navbar-item nav-link active" href="/visualize">
-              Visualize
-            </a>
-          </div>
-        </nav>
-        <div
-          className="bs-docs-header bg-dark header-title"
-          id="visualize-header"
-        >
-          <div className="container">
-            <h1 className="display-3 text-white">Data Visualization Tool</h1>
-          </div>
-        </div>
+        <Navigation active="Visualize"></Navigation>
+        <Header
+          text="Data Visualization Tool"
+          style={{ backgroundImage: `url(${bgImage})` }}
+        ></Header>
         <InputPanel
           onLoading={this.onLoading}
           onError={this.onError}
