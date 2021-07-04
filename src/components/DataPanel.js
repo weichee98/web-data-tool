@@ -7,7 +7,6 @@ class TablePageNavigator extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: 0,
       currentPage: 0,
       maxPage: 0,
       numEntries: 0,
@@ -21,14 +20,13 @@ class TablePageNavigator extends Component {
 
   static get propTypes() {
     return {
-      onChange: PropTypes.func,
+      onChange: PropTypes.func.isRequired,
       height: PropTypes.string,
     };
   }
 
   resetState() {
     this.setState({
-      value: 0,
       currentPage: 0,
       maxPage: 0,
       numEntries: 0,
@@ -38,7 +36,6 @@ class TablePageNavigator extends Component {
 
   updateState(numEntries, rowPerPage) {
     this.setState({
-      value: 1,
       currentPage: 1,
       numEntries: numEntries,
       rowPerPage: rowPerPage,
@@ -59,20 +56,16 @@ class TablePageNavigator extends Component {
     }
   }
 
-  callOnChange() {
-    if (this.props.onChange == null) {
-      return;
-    }
-    this.props.onChange(this);
+  callOnChange(newPage) {
+    this.props.onChange(newPage);
   }
 
   onSliderRelease(event) {
     var newPage = parseInt(event.target.value, 10);
     this.setState({
       currentPage: newPage,
-      value: newPage,
     });
-    this.callOnChange();
+    this.callOnChange(newPage);
   }
 
   onSliderChange(event) {
@@ -87,19 +80,17 @@ class TablePageNavigator extends Component {
       this.state.currentPage - 1
     );
     this.setState({
-      value: newPage,
       currentPage: newPage,
     });
-    this.callOnChange();
+    this.callOnChange(newPage);
   }
 
   onNextClick() {
     var newPage = Math.min(this.state.maxPage, this.state.currentPage + 1);
     this.setState({
-      value: newPage,
       currentPage: newPage,
     });
-    this.callOnChange();
+    this.callOnChange(newPage);
   }
 
   render() {
@@ -166,13 +157,13 @@ class DataPanel extends Component {
     };
   }
 
-  onPageChange(navigator) {
-    if (navigator.state.currentPage == 0) {
+  onPageChange(newPage) {
+    if (newPage == 0) {
       this.setState({ name: "noMessage" });
     }
     this.setState({
       name: "table",
-      currentPage: navigator.state.currentPage,
+      currentPage: newPage,
     });
   }
 
@@ -199,7 +190,7 @@ class DataPanel extends Component {
       rowPerPage: rowPerPage,
     });
     var numEntries = this.state.df.count();
-    this.navigator.updateState(numEntries, rowPerPage);
+    this.navigator.current.updateState(numEntries, rowPerPage);
   }
 
   setError(error) {
@@ -210,7 +201,7 @@ class DataPanel extends Component {
       rowPerPage: 0,
       error: error,
     });
-    this.navigator.resetState();
+    this.navigator.current.resetState();
   }
 
   setLoading() {
@@ -218,9 +209,18 @@ class DataPanel extends Component {
   }
 
   renderTable() {
+    var length = this.state.df.count();
+    var rowPerPage = this.state.rowPerPage;
+    var page = this.state.currentPage;
+    var start = (page - 1) * rowPerPage;
+    var end = Math.min(page * rowPerPage, length);
+    var rows = [];
+    for (var i = start; i < end; i++) {
+      rows.push(this.state.df.getRow(i));
+    }
     return (
       <table className="table table-striped table-hover">
-        <thead className="thead-dark">
+        <thead className="table-dark">
           <tr>
             {this.state.df.listColumns().map((col, i) => (
               <th key={i}>{col}</th>
@@ -228,27 +228,13 @@ class DataPanel extends Component {
           </tr>
         </thead>
         <tbody>
-          {() => {
-            var length = this.state.df.count();
-            var rowPerPage = this.navigator.state.rowPerPage;
-            var page = this.state.currentPage;
-            var start = (page - 1) * rowPerPage;
-            var end = Math.min(page * rowPerPage, length);
-            var rows = [];
-            for (var i = start; i < end; i++) {
-              rows.push(
-                <tr key={i}>
-                  {this.state.df
-                    .getRow(i)
-                    .toArray()
-                    .map((col, j) => (
-                      <td key={j}>{col}</td>
-                    ))}
-                </tr>
-              );
-            }
-            return rows;
-          }}
+          {rows.map((row, i) => (
+            <tr key={i}>
+              {row.toArray().map((col, j) => (
+                <td key={j}>{col}</td>
+              ))}
+            </tr>
+          ))}
         </tbody>
       </table>
     );
@@ -259,7 +245,7 @@ class DataPanel extends Component {
       case "loading":
         return (
           <div className="spinner-border" role="status">
-            <span className="sr-only">Loading...</span>
+            <span className="sr-only"></span>
           </div>
         );
       case "noMessage":
