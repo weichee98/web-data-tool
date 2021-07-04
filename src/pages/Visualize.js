@@ -1,10 +1,7 @@
 import "./Visualize.css";
 import bgImage from "./img/visualize-bg.jpg";
 import React, { Component } from "react";
-import Navigation from "../components/Navigation";
-import Header from "../components/Header";
-import InputPanel from "../components/InputPanel";
-import DataPanel from "../components/DataPanel";
+import { Navigation, Header, InputPanel, DataPanel } from "../components";
 
 class Visualize extends Component {
   constructor(props) {
