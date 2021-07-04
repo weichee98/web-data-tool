@@ -75,9 +75,6 @@ typings/
 # FuseBox cache
 .fusebox/
 
-# VSCode
-.vscode
-
 # TODO
 TODO# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
