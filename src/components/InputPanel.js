@@ -203,12 +203,20 @@ class InputPanel extends Component {
       <div>
         <nav className="navbar navbar-light bg-light">
           <a
-            className="navbar-toggler input-navbar-toggle"
+            className="input-navbar-toggle nav-link"
             type="button"
-            onClick={() => this.setState({ open: !this.state.open })}
+            onClick={(event) => {
+              event.preventDefault();
+              this.setState({ open: !this.state.open });
+            }}
           >
-            <span className="navbar-toggler-icon"></span>
-            <label>Import Data</label>
+            <span
+              className="navbar-toggler-icon"
+              style={{ zoom: "50%" }}
+            ></span>
+            <label style={{ marginLeft: ".5rem", color: "#0d6efd" }}>
+              Import Data
+            </label>
           </a>
         </nav>
         <Collapse in={this.state.open}>

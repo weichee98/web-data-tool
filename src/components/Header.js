@@ -10,7 +10,7 @@ class Header extends Component {
   static get propTypes() {
     return {
       text: PropTypes.string.isRequired,
-      style: PropTypes.style.isRequired,
+      style: PropTypes.object,
     };
   }
 

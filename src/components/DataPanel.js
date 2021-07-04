@@ -98,7 +98,8 @@ class TablePageNavigator extends Component {
       <div
         className="table-page-navigator"
         style={{
-          paddingTop: "1rem",
+          paddingTop: ".5rem",
+          paddingBottom: ".5rem",
           height: this.props.height,
         }}
       >
@@ -263,10 +264,10 @@ class DataPanel extends Component {
         <TablePageNavigator
           onChange={this.onPageChange}
           ref={this.navigator}
-          style={{ height: this.props.navigatorHeight || "auto" }}
+          height={this.props.navigatorHeight || "auto"}
         ></TablePageNavigator>
         <div
-          className="card-body"
+          className="container"
           style={{ height: this.props.panelHeight || "auto" }}
         >
           <div className="card text-center bg-light data-sub-container">

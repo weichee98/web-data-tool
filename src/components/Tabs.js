@@ -15,7 +15,8 @@ class Tab extends Component {
     };
   }
 
-  onClick() {
+  onClick(event) {
+    event.preventDefault();
     const { label, onClick } = this.props;
     onClick(label);
   }
