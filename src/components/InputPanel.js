@@ -1,7 +1,7 @@
 import "./InputPanel.css";
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import Tabs from "./Tabs";
+import { Tabs } from "./Tabs";
 import { Collapse } from "react-bootstrap";
 import CSVParser from "../utils/CSVParser";
 import DTypes from "../utils/DataTypes";
