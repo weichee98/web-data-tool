@@ -7,6 +7,15 @@ import DTypes from "../utils/DataTypes";
 
 const TIMEOUT = 100;
 
+class Orientation {
+  static get VERTICAL() {
+    return "v";
+  }
+  static get HORIZONTAL() {
+    return "h";
+  }
+}
+
 class PlotComponent extends Component {
   constructor(props) {
     super(props);
@@ -18,6 +27,7 @@ class PlotComponent extends Component {
       df: PropTypes.object.isRequired,
       colDtypes: PropTypes.object.isRequired,
       label: PropTypes.string,
+      title: PropTypes.string.isRequired,
       onClick: PropTypes.func.isRequired,
       onLoading: PropTypes.func.isRequired,
     };
@@ -53,6 +63,7 @@ class PlotComponent extends Component {
   render() {
     return (
       <div className="tab-pane card-body text-center">
+        <h5>{this.props.title}</h5>
         {this.children}
         <button
           className="btn btn-primary text-center"
@@ -320,6 +331,133 @@ export class ScatterPlot extends PlotComponent {
       yaxis: { title: y, zeroline: false },
       zaxis: { title: z, zeroline: false },
     };
+
+    return {
+      name: "plot",
+      data: data,
+      layout: layout,
+      config: config,
+    };
+  }
+}
+
+export class BoxPlot extends PlotComponent {
+  constructor(props) {
+    super(props);
+  }
+
+  get children() {
+    return [
+      <SingleSelect
+        key="x"
+        label="x"
+        options={[""].concat(Object.keys(this.props.colDtypes))}
+        ref={this.inputs.ref("x")}
+      ></SingleSelect>,
+      <SingleSelect
+        key="y"
+        label="y"
+        options={Object.keys(this.props.colDtypes).filter(
+          (column) =>
+            this.props.colDtypes[column] == DTypes.INTEGER ||
+            this.props.colDtypes[column] == DTypes.FLOAT ||
+            this.props.colDtypes[column] == DTypes.DATE
+        )}
+        ref={this.inputs.ref("y")}
+      ></SingleSelect>,
+      <SingleSelect
+        key="hue"
+        label="hue"
+        options={[""].concat(Object.keys(this.props.colDtypes))}
+        ref={this.inputs.ref("hue")}
+      ></SingleSelect>,
+      <SingleSelect
+        key="orientation"
+        label="orientation"
+        options={["vertical", "horizontal"]}
+        ref={this.inputs.ref("orientation")}
+      ></SingleSelect>,
+    ];
+  }
+
+  getPlotParams() {
+    var inputValues = {};
+    this.inputs.map.forEach((input, name) => {
+      inputValues[name] = input.value;
+    });
+    try {
+      return this.box(inputValues);
+    } catch (error) {
+      return {
+        name: "error",
+        error: error,
+      };
+    }
+  }
+
+  box(inputValues) {
+    var layout = {};
+    var config = {};
+    var data = [];
+    const { x, y, hue, orientation } = inputValues;
+    const orient = orientation[0];
+
+    if (hue != "") {
+      var hueVal = this.props.df.unique(hue).toArray(hue);
+      hueVal.forEach((element) => {
+        var trace = {
+          type: "box",
+          boxmean: true,
+          name: element,
+        };
+        var temp = this.getHue(hue, element);
+        if (x == "") {
+          if (orient == Orientation.VERTICAL) trace["y"] = temp.toArray(y);
+          else trace["x"] = temp.toArray(y);
+        } else {
+          if (orient == Orientation.VERTICAL) {
+            trace["x"] = temp.toArray(x);
+            trace["y"] = temp.toArray(y);
+          } else {
+            trace["y"] = temp.toArray(x);
+            trace["x"] = temp.toArray(y);
+          }
+          trace["orientation"] = orient;
+          layout["boxmode"] = "group";
+        }
+        data.push(trace);
+      });
+      layout["legend"] = { title: { text: hue } };
+    } else {
+      var trace = {
+        type: "box",
+        name: "",
+        boxmean: true,
+      };
+      if (x == "") {
+        if (orient == Orientation.VERTICAL)
+          trace["y"] = this.props.df.toArray(y);
+        else trace["x"] = this.props.df.toArray(y);
+      } else {
+        if (orient == Orientation.VERTICAL) {
+          trace["x"] = this.props.df.toArray(x);
+          trace["y"] = this.props.df.toArray(y);
+        } else {
+          trace["y"] = this.props.df.toArray(x);
+          trace["x"] = this.props.df.toArray(y);
+        }
+        trace["orientation"] = orient;
+      }
+      data.push(trace);
+    }
+
+    if (orient == Orientation.VERTICAL) {
+      layout["xaxis"] = { title: x, zeroline: false };
+      layout["yaxis"] = { title: y, zeroline: false };
+    } else {
+      layout["yaxis"] = { title: x, zeroline: false };
+      layout["xaxis"] = { title: y, zeroline: false };
+    }
 
     return {
       name: "plot",

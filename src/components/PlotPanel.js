@@ -34,6 +34,9 @@ class PlotPanel extends Component {
   }
 
   setPlotParams(params) {
+    if ("config" in params) {
+      params["config"]["scrollZoom"] = true;
+    }
     this.setState(params);
   }
 
@@ -81,6 +84,7 @@ class PlotPanel extends Component {
           colDtypes={this.state.colDtypes}
           key="line"
           label="Line"
+          title="Line Plot"
           onLoading={this.setLoading}
           onClick={this.setPlotParams}
         ></PlotComponent.LinePlot>
@@ -89,9 +93,19 @@ class PlotPanel extends Component {
           colDtypes={this.state.colDtypes}
           key="scatter"
           label="Scatter"
+          title="Scatter Plot"
           onLoading={this.setLoading}
           onClick={this.setPlotParams}
         ></PlotComponent.ScatterPlot>
+        <PlotComponent.BoxPlot
+          df={this.state.df}
+          colDtypes={this.state.colDtypes}
+          key="box"
+          label="Box"
+          title="Box Plot"
+          onLoading={this.setLoading}
+          onClick={this.setPlotParams}
+        ></PlotComponent.BoxPlot>
       </LeftTabs>
     );
   }
