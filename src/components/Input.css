@@ -1,0 +1,23 @@
+.multi-select {
+    text-align: left;
+    max-height: 12.5rem;
+    overflow: auto;
+    padding: .375rem .75rem .375rem .75rem !important;
+    background-image: none !important;
+}
+
+.multi-select input[type=checkbox] {
+    margin-right: .625rem
+}
+
+.multi-select .dropdown-item {
+    padding: 0
+}
+
+.multi-select .dropdown-item:last-child {
+    margin-bottom: 0;
+}
+
+.input-group-text {
+    height: 100%;
+}
