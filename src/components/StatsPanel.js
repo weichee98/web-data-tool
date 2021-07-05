@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import DataFrame from "dataframe-js";
 import Plot from "react-plotly.js";
 import DTypes from "../utils/DataTypes";
+import Spinner from "./Spinner";
 
 const TIMEOUT = 100;
 
@@ -236,11 +237,7 @@ class StatsPanel extends Component {
   renderStatsPanel() {
     switch (this.state.name) {
       case "loading":
-        return (
-          <div className="spinner-border" role="status">
-            <span className="sr-only"></span>
-          </div>
-        );
+        return <Spinner></Spinner>;
       case "noMessage":
         return <h5>No data to display</h5>;
       case "stats":

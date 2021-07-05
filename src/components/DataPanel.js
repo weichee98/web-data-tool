@@ -2,6 +2,7 @@ import "./DataPanel.css";
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import DataFrame from "dataframe-js";
+import Spinner from "./Spinner";
 
 class TablePageNavigator extends Component {
   constructor(props) {
@@ -244,11 +245,7 @@ class DataPanel extends Component {
   renderDataPanel() {
     switch (this.state.name) {
       case "loading":
-        return (
-          <div className="spinner-border" role="status">
-            <span className="sr-only"></span>
-          </div>
-        );
+        return <Spinner></Spinner>;
       case "noMessage":
         return <h5>No data to display</h5>;
       case "table":
