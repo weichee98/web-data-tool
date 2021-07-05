@@ -7,6 +7,7 @@ import {
   InputPanel,
   DataPanel,
   StatsPanel,
+  PlotPanel,
 } from "../components";
 
 class Visualize extends Component {
@@ -15,6 +16,7 @@ class Visualize extends Component {
     this.inputPanel = React.createRef();
     this.dataPanel = React.createRef();
     this.statsPanel = React.createRef();
+    this.plotPanel = React.createRef();
     this.df = null;
     this.col_dtypes = null;
   }
@@ -32,6 +34,7 @@ class Visualize extends Component {
     this.col_dtypes = col_dtypes;
     this.dataPanel.current.setDataFrame(this.df);
     this.statsPanel.current.setDataFrame(this.df, this.col_dtypes);
+    this.plotPanel.current.setDataFrame(this.df, this.col_dtypes);
   };
 
   render() {
@@ -63,6 +66,9 @@ class Visualize extends Component {
               ref={this.statsPanel}
             ></StatsPanel>
           </div>
+        </div>
+        <div style={{ paddingTop: "1rem" }}>
+          <PlotPanel height="40rem" ref={this.plotPanel}></PlotPanel>
         </div>
       </div>
     );
