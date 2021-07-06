@@ -18,7 +18,7 @@ class Visualize extends Component {
     this.statsPanel = React.createRef();
     this.plotPanel = React.createRef();
     this.df = null;
-    this.col_dtypes = null;
+    this.colDtypes = null;
   }
 
   onLoading = () => {
@@ -29,12 +29,12 @@ class Visualize extends Component {
     this.dataPanel.current.setError(error);
   };
 
-  onChange = (df, col_dtypes) => {
+  onChange = (df, colDtypes) => {
     this.df = df;
-    this.col_dtypes = col_dtypes;
+    this.colDtypes = colDtypes;
     this.dataPanel.current.setDataFrame(this.df);
-    this.statsPanel.current.setDataFrame(this.df, this.col_dtypes);
-    this.plotPanel.current.setDataFrame(this.df, this.col_dtypes);
+    this.statsPanel.current.setDataFrame(this.df, this.colDtypes);
+    this.plotPanel.current.setDataFrame(this.df, this.colDtypes);
   };
 
   render() {

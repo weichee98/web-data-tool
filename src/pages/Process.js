@@ -1,11 +1,78 @@
-import React from "react";
+import "./Process.css";
+import bgImage from "./img/process-bg.jpg";
+import React, { Component } from "react";
+import {
+  Navigation,
+  Header,
+  InputPanel,
+  DataPanel,
+  StatsPanel,
+  ProcessPanel,
+} from "../components";
 
-function Process() {
-  return (
-    <div className="process">
-      <div className="container">Process</div>
-    </div>
-  );
+class Process extends Component {
+  constructor(props) {
+    super(props);
+    this.inputPanel = React.createRef();
+    this.dataPanel = React.createRef();
+    this.statsPanel = React.createRef();
+    this.processPanel = React.createRef();
+    this.df = null;
+    this.colDtypes = null;
+  }
+
+  onLoading = () => {
+    this.dataPanel.current.setLoading();
+  };
+
+  onError = (error) => {
+    this.dataPanel.current.setError(error);
+  };
+
+  onChange = (df, colDtypes) => {
+    this.df = df;
+    this.colDtypes = colDtypes;
+    this.dataPanel.current.setDataFrame(this.df);
+    this.statsPanel.current.setDataFrame(this.df, this.colDtypes);
+    this.processPanel.current.setDataFrame(this.df, this.colDtypes);
+  };
+
+  render() {
+    return (
+      <div className="process">
+        <Navigation active="Process"></Navigation>
+        <Header
+          text="Data Processing Tool"
+          style={{ backgroundImage: `url(${bgImage})` }}
+        ></Header>
+        <InputPanel
+          onLoading={this.onLoading}
+          onError={this.onError}
+          onChange={this.onChange}
+          ref={this.inputPanel}
+        ></InputPanel>
+        <div style={{ display: "flex" }}>
+          <div style={{ flex: 5, overflow: "auto" }}>
+            <DataPanel
+              navigatorHeight="4rem"
+              panelHeight="30rem"
+              ref={this.dataPanel}
+            ></DataPanel>
+          </div>
+          <div style={{ flex: 3, overflow: "auto" }}>
+            <StatsPanel
+              menuHeight="4rem"
+              panelHeight="30rem"
+              ref={this.statsPanel}
+            ></StatsPanel>
+          </div>
+        </div>
+        <div style={{ paddingTop: "1rem" }}>
+          <ProcessPanel ref={this.processPanel}></ProcessPanel>
+        </div>
+      </div>
+    );
+  }
 }
 
 export default Process;
