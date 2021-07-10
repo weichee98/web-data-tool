@@ -75,7 +75,8 @@ class TablePageNavigator extends Component {
     });
   }
 
-  onPreviousClick() {
+  onPreviousClick(event) {
+    event.preventDefault();
     var newPage = Math.max(
       Math.min(this.state.maxPage, 1),
       this.state.currentPage - 1
@@ -86,7 +87,8 @@ class TablePageNavigator extends Component {
     this.callOnChange(newPage);
   }
 
-  onNextClick() {
+  onNextClick(event) {
+    event.preventDefault();
     var newPage = Math.min(this.state.maxPage, this.state.currentPage + 1);
     this.setState({
       currentPage: newPage,

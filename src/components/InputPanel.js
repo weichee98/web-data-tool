@@ -44,12 +44,12 @@ class CSVTab extends Component {
       throw new Error("repeated columns found");
     }
     var df = new DataFrame(arr.slice(1, arr.length), columns);
-    var col_dtypes = {};
+    var colDtypes = {};
     columns.forEach((c_name) => {
       var dtype = DTypes.checkArrayDtype(df.toArray(c_name));
-      col_dtypes[c_name] = dtype;
+      colDtypes[c_name] = dtype;
     });
-    return { df: df, col_dtypes: col_dtypes };
+    return { df: df, colDtypes: colDtypes };
   }
 
   onInputChange(event) {
@@ -59,8 +59,8 @@ class CSVTab extends Component {
       setTimeout(async () => {
         await CSVParser.readFileContent(input.files[0])
           .then((content) => {
-            const { df, col_dtypes } = this.createDataFrame(content);
-            this.props.onChange(df, col_dtypes);
+            const { df, colDtypes } = this.createDataFrame(content);
+            this.props.onChange(df, colDtypes);
           })
           .catch((error) => {
             this.props.onError(error);
@@ -125,12 +125,12 @@ class TSVTab extends Component {
       throw new Error("repeated columns found");
     }
     var df = new DataFrame(arr.slice(1, arr.length), columns);
-    var col_dtypes = {};
+    var colDtypes = {};
     columns.forEach((c_name) => {
       var dtype = DTypes.checkArrayDtype(df.toArray(c_name));
-      col_dtypes[c_name] = dtype;
+      colDtypes[c_name] = dtype;
     });
-    return { df: df, col_dtypes: col_dtypes };
+    return { df: df, colDtypes: colDtypes };
   }
 
   onInputChange(event) {
@@ -140,8 +140,8 @@ class TSVTab extends Component {
       setTimeout(async () => {
         await CSVParser.readFileContent(input.files[0])
           .then((content) => {
-            const { df, col_dtypes } = this.createDataFrame(content);
-            this.props.onChange(df, col_dtypes);
+            const { df, colDtypes } = this.createDataFrame(content);
+            this.props.onChange(df, colDtypes);
           })
           .catch((error) => {
             this.props.onError(error);
@@ -194,8 +194,8 @@ class InputPanel extends Component {
     this.props.onLoading();
   }
 
-  onInputChange(df, col_dtypes) {
-    this.props.onChange(df, col_dtypes);
+  onInputChange(df, colDtypes) {
+    this.props.onChange(df, colDtypes);
   }
 
   render() {
