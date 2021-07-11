@@ -227,7 +227,7 @@ class DataPanel extends Component {
         <thead className="table-dark">
           <tr>
             {this.state.df.listColumns().map((col, i) => (
-              <th key={i}>{col}</th>
+              <th key={i}>{col.toString()}</th>
             ))}
           </tr>
         </thead>
@@ -235,7 +235,7 @@ class DataPanel extends Component {
           {rows.map((row, i) => (
             <tr key={i}>
               {row.toArray().map((col, j) => (
-                <td key={j}>{col}</td>
+                <td key={j}>{col.toString()}</td>
               ))}
             </tr>
           ))}

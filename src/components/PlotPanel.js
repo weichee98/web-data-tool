@@ -71,8 +71,8 @@ class PlotPanel extends Component {
     return (
       <LeftTabs
         height={this.props.height || "auto"}
-        tabFlex="2"
-        containerFlex="6"
+        tabFlex={2}
+        containerFlex={6}
       >
         <div key="plotPanel" className="card-body" style={{ height: "100%" }}>
           <div className="card text-center bg-light plot-panel-container">
@@ -106,6 +106,33 @@ class PlotPanel extends Component {
           onLoading={this.setLoading}
           onClick={this.setPlotParams}
         ></PlotComponent.BoxPlot>
+        <PlotComponent.Heatmap
+          df={this.state.df}
+          colDtypes={this.state.colDtypes}
+          key="heatmap"
+          label="Heatmap"
+          title="Heatmap"
+          onLoading={this.setLoading}
+          onClick={this.setPlotParams}
+        ></PlotComponent.Heatmap>
+        <PlotComponent.Histogram
+          df={this.state.df}
+          colDtypes={this.state.colDtypes}
+          key="histogram"
+          label="Histogram"
+          title="Histogram"
+          onLoading={this.setLoading}
+          onClick={this.setPlotParams}
+        ></PlotComponent.Histogram>
+        <PlotComponent.BarChart
+          df={this.state.df}
+          colDtypes={this.state.colDtypes}
+          key="bar"
+          label="Bar Chart"
+          title="Bar Chart"
+          onLoading={this.setLoading}
+          onClick={this.setPlotParams}
+        ></PlotComponent.BarChart>
       </LeftTabs>
     );
   }

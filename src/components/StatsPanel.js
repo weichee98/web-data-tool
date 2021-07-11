@@ -219,8 +219,8 @@ class StatsPanel extends Component {
             >
               {statsTable.map(({ name, value }, i) => (
                 <tr key={i}>
-                  <th>{name}</th>
-                  <td>{value}</td>
+                  <th>{name.toString()}</th>
+                  <td>{value.toString()}</td>
                 </tr>
               ))}
             </table>
