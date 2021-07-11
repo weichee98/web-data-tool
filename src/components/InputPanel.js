@@ -3,11 +3,27 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Tabs } from "./Tabs";
 import { Collapse } from "react-bootstrap";
-import CSVParser from "../utils/CSVParser";
 import DTypes from "../utils/DataTypes";
 import DataFrame from "dataframe-js";
 
 const TIMEOUT = 300;
+
+function processDataFrame(df) {
+  df = df.castAll(Array(df.listColumns().length).fill(DTypes.evalValue));
+  var colDtypes = {};
+  const columns = df.listColumns();
+  columns.forEach((c_name) => {
+    var dtype = DTypes.checkArrayDtype(df.toArray(c_name));
+    colDtypes[c_name] = dtype;
+  });
+  return { df: df, colDtypes: colDtypes };
+}
+
+const timeoutPromise = new Promise((resolve, reject) => {
+  setTimeout(() => {
+    reject("Timeout reading file");
+  }, 10000);
+});
 
 class CSVTab extends Component {
   constructor(props) {
@@ -24,42 +40,14 @@ class CSVTab extends Component {
     };
   }
 
-  createDataFrame(content) {
-    if (content === "") {
-      throw new Error("content is empty");
-    }
-    var arr = CSVParser.csvToArray(content, ",");
-    if (arr.length == 1) {
-      throw new Error("empty table with header only");
-    }
-    var columns = [];
-    arr[0].forEach((element, i) => {
-      if (element !== "") {
-        columns.push(element);
-      } else {
-        columns.push(`undefined::${i}`);
-      }
-    });
-    if (new Set(columns).size !== columns.length) {
-      throw new Error("repeated columns found");
-    }
-    var df = new DataFrame(arr.slice(1, arr.length), columns);
-    var colDtypes = {};
-    columns.forEach((c_name) => {
-      var dtype = DTypes.checkArrayDtype(df.toArray(c_name));
-      colDtypes[c_name] = dtype;
-    });
-    return { df: df, colDtypes: colDtypes };
-  }
-
   onInputChange(event) {
     const input = event.target;
     if ("files" in input && input.files.length > 0) {
       this.props.onLoading();
       setTimeout(async () => {
-        await CSVParser.readFileContent(input.files[0])
-          .then((content) => {
-            const { df, colDtypes } = this.createDataFrame(content);
+        await Promise.race([DataFrame.fromCSV(input.files[0]), timeoutPromise])
+          .then((loaded) => {
+            const { df, colDtypes } = processDataFrame(loaded);
             this.props.onChange(df, colDtypes);
           })
           .catch((error) => {
@@ -105,42 +93,14 @@ class TSVTab extends Component {
     };
   }
 
-  createDataFrame(content) {
-    if (content === "") {
-      throw new Error("content is empty");
-    }
-    var arr = CSVParser.csvToArray(content, "\t");
-    if (arr.length == 1) {
-      throw new Error("empty table with header only");
-    }
-    var columns = [];
-    arr[0].forEach((element, i) => {
-      if (element !== "") {
-        columns.push(element);
-      } else {
-        columns.push(`undefined::${i}`);
-      }
-    });
-    if (new Set(columns).size !== columns.length) {
-      throw new Error("repeated columns found");
-    }
-    var df = new DataFrame(arr.slice(1, arr.length), columns);
-    var colDtypes = {};
-    columns.forEach((c_name) => {
-      var dtype = DTypes.checkArrayDtype(df.toArray(c_name));
-      colDtypes[c_name] = dtype;
-    });
-    return { df: df, colDtypes: colDtypes };
-  }
-
   onInputChange(event) {
     const input = event.target;
     if ("files" in input && input.files.length > 0) {
       this.props.onLoading();
       setTimeout(async () => {
-        await CSVParser.readFileContent(input.files[0])
-          .then((content) => {
-            const { df, colDtypes } = this.createDataFrame(content);
+        await Promise.race([DataFrame.fromTSV(input.files[0]), timeoutPromise])
+          .then((loaded) => {
+            const { df, colDtypes } = processDataFrame(loaded);
             this.props.onChange(df, colDtypes);
           })
           .catch((error) => {
@@ -155,6 +115,59 @@ class TSVTab extends Component {
       <div className="tab-pane" label={this.props.label}>
         <h5 className="card-title">TSV File</h5>
         <p className="card-text">Upload your TSV file.</p>
+        <div className="custom-file">
+          <label className="btn btn-primary text-center">
+            Upload
+            <input
+              type="file"
+              className="custom-file-input"
+              style={{ display: "none" }}
+              onChange={this.onInputChange}
+            ></input>
+          </label>
+        </div>
+      </div>
+    );
+  }
+}
+
+class JSONTab extends Component {
+  constructor(props) {
+    super(props);
+    this.onInputChange = this.onInputChange.bind(this);
+  }
+
+  static get propTypes() {
+    return {
+      label: PropTypes.string.isRequired,
+      onChange: PropTypes.func.isRequired,
+      onLoading: PropTypes.func.isRequired,
+      onError: PropTypes.func.isRequired,
+    };
+  }
+
+  onInputChange(event) {
+    const input = event.target;
+    if ("files" in input && input.files.length > 0) {
+      this.props.onLoading();
+      setTimeout(async () => {
+        await Promise.race([DataFrame.fromJSON(input.files[0]), timeoutPromise])
+          .then((loaded) => {
+            const { df, colDtypes } = processDataFrame(loaded);
+            this.props.onChange(df, colDtypes);
+          })
+          .catch((error) => {
+            this.props.onError(error);
+          });
+      }, TIMEOUT);
+    }
+  }
+
+  render() {
+    return (
+      <div className="tab-pane" label={this.props.label}>
+        <h5 className="card-title">JSON File</h5>
+        <p className="card-text">Upload your JSON file.</p>
         <div className="custom-file">
           <label className="btn btn-primary text-center">
             Upload
@@ -235,6 +248,12 @@ class InputPanel extends Component {
                 onError={this.props.onError}
                 onChange={this.onInputChange}
               ></TSVTab>
+              <JSONTab
+                label="JSON"
+                onLoading={this.onInputLoading}
+                onError={this.props.onError}
+                onChange={this.onInputChange}
+              ></JSONTab>
             </Tabs>
           </div>
         </Collapse>
