@@ -85,7 +85,7 @@ class Process extends Component {
         <div style={{ paddingTop: "1rem" }}>
           <ProcessPanel
             ref={this.processPanel}
-            height="20rem"
+            height="18rem"
             onLoading={this.onProcessLoading}
             onRender={this.onRenderProcessDF}
             onRenderError={this.onProcessError}
@@ -95,14 +95,14 @@ class Process extends Component {
           <div style={{ flex: 5, overflow: "auto" }}>
             <DataPanel
               navigatorHeight="3rem"
-              panelHeight="18rem"
+              panelHeight="20rem"
               ref={this.processDataPanel}
             ></DataPanel>
           </div>
           <div style={{ flex: 3, overflow: "auto" }}>
             <StatsPanel
               menuHeight="3rem"
-              panelHeight="18rem"
+              panelHeight="20rem"
               ref={this.processStatsPanel}
             ></StatsPanel>
           </div>

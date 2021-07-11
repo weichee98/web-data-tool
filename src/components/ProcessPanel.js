@@ -5,6 +5,10 @@ import PropTypes from "prop-types";
 import AceEditor from "react-ace";
 import DTypes from "../utils/DataTypes";
 
+import "ace-builds/src-noconflict/mode-mysql";
+import "ace-builds/src-noconflict/theme-sqlserver";
+import "ace-builds/src-noconflict/ext-language_tools";
+
 const TIMEOUT = 300;
 
 class ProcessPanel extends Component {
@@ -56,6 +60,8 @@ class ProcessPanel extends Component {
       viewList: new Map(),
       activeView: null,
       activeViewName: null,
+      displayViewName: "",
+      displaySQL: "",
       messageType: "message",
       error: null,
       success: null,
@@ -329,7 +335,8 @@ class ProcessPanel extends Component {
                 <span className="input-group-text">SQL</span>
               </div>
               <AceEditor
-                mode="sql"
+                mode="mysql"
+                theme="sqlserver"
                 value={this.state.displaySQL}
                 readOnly={
                   this.state.activeViewName == null ||
