@@ -129,7 +129,12 @@ class StatsPanel extends Component {
 
       // dtypes, count, nunique
       this.logErrorToConsole(() => {
-        var nunique = series.distinct(col_name).count();
+        var nunique;
+        if (dtype == DTypes.DATE) {
+          nunique = series.cast(col_name, String).distinct(col_name).count();
+        } else {
+          nunique = series.distinct(col_name).count();
+        }
         var count = series.dropMissingValues().count();
         var length = series.count();
         var percentage = (count / length) * 100;
