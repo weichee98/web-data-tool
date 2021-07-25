@@ -10,7 +10,6 @@ class Navigation extends Component {
   get children() {
     return [
       { name: "Home", ref: "/" },
-      { name: "Process", ref: "/process" },
       { name: "Visualize", ref: "/visualize" },
     ];
   }

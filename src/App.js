@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import { Home, Visualize, Process } from "./pages";
+import { Home, Visualize } from "./pages";
 
 function App() {
   return (
@@ -12,11 +12,6 @@ function App() {
             path="/visualize"
             exact
             component={() => <Visualize></Visualize>}
-          ></Route>
-          <Route
-            path="/process"
-            exact
-            component={() => <Process></Process>}
           ></Route>
         </Switch>
       </Router>
