@@ -97,6 +97,33 @@ class PlotPanel extends Component {
           onLoading={this.setLoading}
           onClick={this.setPlotParams}
         ></PlotComponent.ScatterPlot>
+        <PlotComponent.BarChart
+          df={this.state.df}
+          colDtypes={this.state.colDtypes}
+          key="bar"
+          label="Bar"
+          title="Bar"
+          onLoading={this.setLoading}
+          onClick={this.setPlotParams}
+        ></PlotComponent.BarChart>
+        <PlotComponent.BubblePlot
+          df={this.state.df}
+          colDtypes={this.state.colDtypes}
+          key="bubble"
+          label="Bubble"
+          title="Bubble"
+          onLoading={this.setLoading}
+          onClick={this.setPlotParams}
+        ></PlotComponent.BubblePlot>
+        <PlotComponent.AreaPlot
+          df={this.state.df}
+          colDtypes={this.state.colDtypes}
+          key="area"
+          label="Area"
+          title="Area"
+          onLoading={this.setLoading}
+          onClick={this.setPlotParams}
+        ></PlotComponent.AreaPlot>
         <PlotComponent.BoxPlot
           df={this.state.df}
           colDtypes={this.state.colDtypes}
@@ -124,15 +151,6 @@ class PlotPanel extends Component {
           onLoading={this.setLoading}
           onClick={this.setPlotParams}
         ></PlotComponent.Histogram>
-        <PlotComponent.BarChart
-          df={this.state.df}
-          colDtypes={this.state.colDtypes}
-          key="bar"
-          label="Bar Chart"
-          title="Bar Chart"
-          onLoading={this.setLoading}
-          onClick={this.setPlotParams}
-        ></PlotComponent.BarChart>
       </LeftTabs>
     );
   }

@@ -965,3 +965,218 @@ export class BarChart extends PlotComponent {
     };
   }
 }
+
+export class BubblePlot extends PlotComponent {
+  constructor(props) {
+    super(props);
+    this.processPlotParams = this.bubble.bind(this);
+  }
+
+  get children() {
+    return [
+      <SingleSelect
+        key="x"
+        label="x"
+        options={Object.keys(this.props.colDtypes).filter(
+          (column) =>
+            this.props.colDtypes[column] == DTypes.INTEGER ||
+            this.props.colDtypes[column] == DTypes.FLOAT ||
+            this.props.colDtypes[column] == DTypes.DATE
+        )}
+        ref={this.inputs.ref("x")}
+      ></SingleSelect>,
+      <SingleSelect
+        key="y"
+        label="y"
+        options={Object.keys(this.props.colDtypes).filter(
+          (column) =>
+            this.props.colDtypes[column] == DTypes.INTEGER ||
+            this.props.colDtypes[column] == DTypes.FLOAT ||
+            this.props.colDtypes[column] == DTypes.DATE
+        )}
+        ref={this.inputs.ref("y")}
+      ></SingleSelect>,
+      <SingleSelect
+        key="size"
+        label="size"
+        options={Object.keys(this.props.colDtypes).filter(
+          (column) =>
+            this.props.colDtypes[column] == DTypes.INTEGER ||
+            this.props.colDtypes[column] == DTypes.FLOAT
+        )}
+        ref={this.inputs.ref("size")}
+      ></SingleSelect>,
+      <SingleSelect
+        key="hue"
+        label="hue"
+        options={[""].concat(Object.keys(this.props.colDtypes))}
+        ref={this.inputs.ref("hue")}
+      ></SingleSelect>,
+    ];
+  }
+
+  bubble(inputValues) {
+    var layout = {};
+    var config = {};
+    var data = [];
+    const { x, y, size, hue } = inputValues;
+
+    if (hue == "") {
+      data.push({
+        x: this.props.df.toArray(x),
+        y: this.props.df.toArray(y),
+        mode: "markers",
+        marker: {
+          size: this.props.df.toArray(size),
+          sizemode: "area",
+        },
+      });
+    } else {
+      const hueVal = this.props.df.unique(hue).toArray(hue);
+      hueVal.forEach((element) => {
+        var trace = {
+          mode: "markers",
+          name: element,
+        };
+        var temp = this.getHue(hue, element);
+        trace["x"] = temp.toArray(x);
+        trace["y"] = temp.toArray(y);
+        trace["marker"] = {
+          size: temp.toArray(size),
+          sizemode: "area",
+        };
+        data.push(trace);
+      });
+      layout["legend"] = { title: { text: hue } };
+    }
+    layout["xaxis"] = { title: x, zeroline: false };
+    layout["yaxis"] = { title: y, zeroline: false };
+
+    return {
+      name: "plot",
+      data: data,
+      layout: layout,
+      config: config,
+    };
+  }
+}
+
+export class AreaPlot extends PlotComponent {
+  constructor(props) {
+    super(props);
+    this.processPlotParams = this.area.bind(this);
+  }
+
+  get children() {
+    return [
+      <SingleSelect
+        key="x"
+        label="x"
+        options={Object.keys(this.props.colDtypes).filter(
+          (column) =>
+            this.props.colDtypes[column] == DTypes.INTEGER ||
+            this.props.colDtypes[column] == DTypes.FLOAT ||
+            this.props.colDtypes[column] == DTypes.DATE
+        )}
+        ref={this.inputs.ref("x")}
+      ></SingleSelect>,
+      <MultiSelect
+        key="y"
+        label="y"
+        options={Object.keys(this.props.colDtypes).filter(
+          (column) =>
+            this.props.colDtypes[column] == DTypes.INTEGER ||
+            this.props.colDtypes[column] == DTypes.FLOAT ||
+            this.props.colDtypes[column] == DTypes.DATE
+        )}
+        ref={this.inputs.ref("y")}
+      ></MultiSelect>,
+      <SingleSelect
+        key="hue"
+        label="hue"
+        options={[""].concat(Object.keys(this.props.colDtypes))}
+        ref={this.inputs.ref("hue")}
+      ></SingleSelect>,
+      <SingleSelect
+        key="stack"
+        label="stack"
+        options={["false", "true"]}
+        ref={this.inputs.ref("stack")}
+      ></SingleSelect>,
+      <SingleSelect
+        key="groupnorm"
+        label="groupnorm"
+        options={["", "fraction", "percent"]}
+        ref={this.inputs.ref("groupnorm")}
+      ></SingleSelect>,
+    ];
+  }
+
+  area(inputValues) {
+    var layout = {};
+    var config = {};
+    var data = [];
+    var { x, y, hue, stack, groupnorm } = inputValues;
+    stack = DTypes.evalValue(stack);
+
+    if (y.length == 0) {
+      throw new Error("y not selected");
+    } else if (y.length == 1) {
+      if (hue == "") {
+        data.push({
+          x: this.props.df.toArray(x),
+          y: this.props.df.toArray(y[0]),
+          type: "scattergl",
+          fill: "tozeroy",
+        });
+      } else {
+        const hueVal = this.props.df.unique(hue).toArray(hue);
+        hueVal.forEach((element) => {
+          var trace = {
+            name: element,
+          };
+          var temp = this.getHue(hue, element);
+          trace["x"] = temp.toArray(x);
+          trace["y"] = temp.toArray(y[0]);
+          if (stack) {
+            trace["stackgroup"] = "one";
+            trace["groupnorm"] = groupnorm;
+          } else {
+            trace["type"] = "scattergl";
+            trace["fill"] = "tozeroy";
+          }
+          data.push(trace);
+        });
+        layout["legend"] = { title: { text: hue } };
+      }
+      layout["xaxis"] = { title: x, zeroline: false };
+      layout["yaxis"] = { title: y[0], zeroline: false };
+    } else {
+      if (hue != "") {
+        throw new Error("y must have only 1 column when hue is selected");
+      }
+      y.forEach((c_name) => {
+        var trace = {
+          x: this.props.df.toArray(x),
+          y: this.props.df.toArray(c_name),
+          name: c_name,
+        };
+        if (stack) {
+          trace["stackgroup"] = "one";
+          trace["groupnorm"] = groupnorm;
+        } else {
+          trace["type"] = "scattergl";
+          trace["fill"] = "tozeroy";
+        }
+        data.push(trace);
+      });
+      layout["xaxis"] = { title: x, zeroline: false };
+    }
+    return {
+      name: "plot",
+      data: data,
+      layout: layout,
+      config: config,
+    };
+  }
+}
