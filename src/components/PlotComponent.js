@@ -1337,12 +1337,6 @@ export class ViolinPlot extends PlotComponent {
       hueVal.forEach((element) => {
         var trace = {
           type: "violin",
-          box: {
-            visible: true,
-          },
-          meanline: {
-            visible: true,
-          },
           name: element,
         };
         var temp = this.getHue(hue, element);
@@ -1367,12 +1361,6 @@ export class ViolinPlot extends PlotComponent {
       var trace = {
         type: "violin",
         name: "",
-        box: {
-          visible: true,
-        },
-        meanline: {
-          visible: true,
-        },
       };
       if (x == "") {
         if (orient == Orientation.VERTICAL)
