@@ -1,0 +1,16 @@
+.header-title {
+    text-align: center;
+    position: relative;
+    background-size: cover;
+    background-position: center;
+}
+
+.header-title .container {
+    text-align: left; 
+    width: fit-content;
+}
+
+.header-title .container h1 {
+    padding: 6.25rem;
+    margin: 0px
+}

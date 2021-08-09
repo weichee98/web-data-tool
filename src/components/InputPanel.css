@@ -1,0 +1,10 @@
+.input-navbar-toggle label {
+    cursor: pointer; 
+    font-size: 1rem; 
+    margin: .188rem;
+}
+
+.import-btn:hover {
+    background-color: #efefef;
+    border-radius: .5rem;
+}

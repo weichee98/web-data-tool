@@ -1,0 +1,33 @@
+.stats-sub-container {
+    width: 100%; 
+    height: 100%; 
+    justify-content: center
+}
+
+.stats-panel {
+    width: 100%; 
+    overflow: auto;
+}
+
+.stats-panel .table tr {
+    margin-bottom: 0;
+    border-top: 0.06rem solid #dee2e6;
+    border-bottom: 0.06rem solid #dee2e6;
+}
+
+.stats-panel .table th, .stats-panel .table td{
+    padding: .15rem .75rem;
+}
+
+.stats_value_counts {
+    overflow: auto;
+}
+
+.dropdown-menu {
+    max-height: 40rem;
+    overflow-y: auto;
+}
+
+.link .nav-link {
+    color: #0d6efd !important;
+}

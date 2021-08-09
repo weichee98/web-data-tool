@@ -1,0 +1,10 @@
+.main-navbar {
+    background-color: transparent !important; 
+    position: absolute !important; 
+    z-index: 1 !important;
+}
+
+.main-navbar a {
+    padding-right: .8rem !important;
+    padding-left: .8rem !important;
+}
