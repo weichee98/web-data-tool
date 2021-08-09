@@ -19,11 +19,11 @@ function processDataFrame(df) {
   return { df: df, colDtypes: colDtypes };
 }
 
-const timeoutPromise = new Promise((resolve, reject) => {
-  setTimeout(() => {
-    reject("Timeout reading file");
-  }, 10000);
-});
+// const timeoutPromise = new Promise((resolve, reject) => {
+//   setTimeout(() => {
+//     reject("Timeout reading file");
+//   }, 10000);
+// });
 
 class CSVTab extends Component {
   constructor(props) {
@@ -45,7 +45,7 @@ class CSVTab extends Component {
     if ("files" in input && input.files.length > 0) {
       this.props.onLoading();
       setTimeout(async () => {
-        await Promise.race([DataFrame.fromCSV(input.files[0]), timeoutPromise])
+        await DataFrame.fromCSV(input.files[0])
           .then((loaded) => {
             const { df, colDtypes } = processDataFrame(loaded);
             this.props.onChange(df, colDtypes);
@@ -98,7 +98,7 @@ class TSVTab extends Component {
     if ("files" in input && input.files.length > 0) {
       this.props.onLoading();
       setTimeout(async () => {
-        await Promise.race([DataFrame.fromTSV(input.files[0]), timeoutPromise])
+        await DataFrame.fromTSV(input.files[0])
           .then((loaded) => {
             const { df, colDtypes } = processDataFrame(loaded);
             this.props.onChange(df, colDtypes);
@@ -151,7 +151,7 @@ class JSONTab extends Component {
     if ("files" in input && input.files.length > 0) {
       this.props.onLoading();
       setTimeout(async () => {
-        await Promise.race([DataFrame.fromJSON(input.files[0]), timeoutPromise])
+        await DataFrame.fromJSON(input.files[0])
           .then((loaded) => {
             const { df, colDtypes } = processDataFrame(loaded);
             this.props.onChange(df, colDtypes);
