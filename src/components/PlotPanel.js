@@ -102,7 +102,7 @@ class PlotPanel extends Component {
           colDtypes={this.state.colDtypes}
           key="bar"
           label="Bar"
-          title="Bar"
+          title="Bar Chart"
           onLoading={this.setLoading}
           onClick={this.setPlotParams}
         ></PlotComponent.BarChart>
@@ -111,7 +111,7 @@ class PlotPanel extends Component {
           colDtypes={this.state.colDtypes}
           key="bubble"
           label="Bubble"
-          title="Bubble"
+          title="Bubble Chart"
           onLoading={this.setLoading}
           onClick={this.setPlotParams}
         ></PlotComponent.BubblePlot>
@@ -120,7 +120,7 @@ class PlotPanel extends Component {
           colDtypes={this.state.colDtypes}
           key="area"
           label="Area"
-          title="Area"
+          title="Area Plot"
           onLoading={this.setLoading}
           onClick={this.setPlotParams}
         ></PlotComponent.AreaPlot>
@@ -133,6 +133,15 @@ class PlotPanel extends Component {
           onLoading={this.setLoading}
           onClick={this.setPlotParams}
         ></PlotComponent.BoxPlot>
+        <PlotComponent.ViolinPlot
+          df={this.state.df}
+          colDtypes={this.state.colDtypes}
+          key="violin"
+          label="Violin"
+          title="Violin Plot"
+          onLoading={this.setLoading}
+          onClick={this.setPlotParams}
+        ></PlotComponent.ViolinPlot>
         <PlotComponent.Heatmap
           df={this.state.df}
           colDtypes={this.state.colDtypes}
@@ -151,6 +160,15 @@ class PlotPanel extends Component {
           onLoading={this.setLoading}
           onClick={this.setPlotParams}
         ></PlotComponent.Histogram>
+        <PlotComponent.Histogram2D
+          df={this.state.df}
+          colDtypes={this.state.colDtypes}
+          key="histogram2d"
+          label="Histogram 2D"
+          title="Histogram 2D"
+          onLoading={this.setLoading}
+          onClick={this.setPlotParams}
+        ></PlotComponent.Histogram2D>
       </LeftTabs>
     );
   }

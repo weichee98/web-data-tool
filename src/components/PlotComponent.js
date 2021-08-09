@@ -1180,3 +1180,230 @@ export class AreaPlot extends PlotComponent {
     };
   }
 }
+
+export class Histogram2D extends PlotComponent {
+  constructor(props) {
+    super(props);
+    this.processPlotParams = this.histogram2d.bind(this);
+  }
+
+  get children() {
+    return [
+      <SingleSelect
+        key="x"
+        label="x"
+        options={Object.keys(this.props.colDtypes)}
+        ref={this.inputs.ref("x")}
+      ></SingleSelect>,
+      <SingleSelect
+        key="y"
+        label="y"
+        options={Object.keys(this.props.colDtypes)}
+        ref={this.inputs.ref("y")}
+      ></SingleSelect>,
+    ];
+  }
+
+  histogram2d(inputValues) {
+    var layout = {};
+    var config = {};
+    var data = [];
+    const { x, y } = inputValues;
+
+    const xVal = this.props.df.toArray(x);
+    const yVal = this.props.df.toArray(y);
+
+    const scatterTrace = {
+      x: xVal,
+      y: yVal,
+      name: "points",
+      mode: "markers",
+      marker: {
+        size: 2,
+        opacity: 0.4,
+        color: "red",
+      },
+      type: "scattergl",
+    };
+    const densityTrace = {
+      x: xVal,
+      y: yVal,
+      name: "density",
+      showscale: false,
+      colorscale: "Hot",
+      reversescale: true,
+      type: "histogram2dcontour",
+    };
+    const histX = {
+      x: xVal,
+      name: x,
+      yaxis: "y2",
+      type: "histogram",
+      marker: {
+        color: "#1f77b4",
+      },
+    };
+    const histY = {
+      y: yVal,
+      name: y,
+      xaxis: "x2",
+      type: "histogram",
+      marker: {
+        color: "#1f77b4",
+      },
+    };
+    data = [scatterTrace, densityTrace, histX, histY];
+
+    layout["showlegend"] = false;
+    layout["xaxis"] = {
+      domain: [0, 0.85],
+      title: x,
+      zeroline: false,
+    };
+    layout["yaxis"] = {
+      domain: [0, 0.85],
+      title: y,
+      zeroline: false,
+    };
+    layout["xaxis2"] = {
+      domain: [0.85, 1],
+      showgrid: false,
+      zeroline: false,
+    };
+    layout["yaxis2"] = {
+      domain: [0.85, 1],
+      showgrid: false,
+      zeroline: false,
+    };
+
+    return {
+      name: "plot",
+      data: data,
+      layout: layout,
+      config: config,
+    };
+  }
+}
+
+export class ViolinPlot extends PlotComponent {
+  constructor(props) {
+    super(props);
+    this.processPlotParams = this.violin.bind(this);
+  }
+
+  get children() {
+    return [
+      <SingleSelect
+        key="x"
+        label="x"
+        options={[""].concat(Object.keys(this.props.colDtypes))}
+        ref={this.inputs.ref("x")}
+      ></SingleSelect>,
+      <SingleSelect
+        key="y"
+        label="y"
+        options={Object.keys(this.props.colDtypes).filter(
+          (column) =>
+            this.props.colDtypes[column] == DTypes.INTEGER ||
+            this.props.colDtypes[column] == DTypes.FLOAT ||
+            this.props.colDtypes[column] == DTypes.DATE
+        )}
+        ref={this.inputs.ref("y")}
+      ></SingleSelect>,
+      <SingleSelect
+        key="hue"
+        label="hue"
+        options={[""].concat(Object.keys(this.props.colDtypes))}
+        ref={this.inputs.ref("hue")}
+      ></SingleSelect>,
+      <SingleSelect
+        key="orientation"
+        label="orientation"
+        options={["vertical", "horizontal"]}
+        ref={this.inputs.ref("orientation")}
+      ></SingleSelect>,
+    ];
+  }
+
+  violin(inputValues) {
+    var layout = {};
+    var config = {};
+    var data = [];
+    const { x, y, hue, orientation } = inputValues;
+    const orient = orientation[0];
+
+    if (hue != "") {
+      var hueVal = this.props.df.unique(hue).toArray(hue);
+      hueVal.forEach((element) => {
+        var trace = {
+          type: "violin",
+          box: {
+            visible: true,
+          },
+          meanline: {
+            visible: true,
+          },
+          name: element,
+        };
+        var temp = this.getHue(hue, element);
+        if (x == "") {
+          if (orient == Orientation.VERTICAL) trace["y"] = temp.toArray(y);
+          else trace["x"] = temp.toArray(y);
+        } else {
+          if (orient == Orientation.VERTICAL) {
+            trace["x"] = temp.toArray(x);
+            trace["y"] = temp.toArray(y);
+          } else {
+            trace["y"] = temp.toArray(x);
+            trace["x"] = temp.toArray(y);
+          }
+          trace["orientation"] = orient;
+          layout["violinmode"] = "group";
+        }
+        data.push(trace);
+      });
+      layout["legend"] = { title: { text: hue } };
+    } else {
+      var trace = {
+        type: "violin",
+        name: "",
+        box: {
+          visible: true,
+        },
+        meanline: {
+          visible: true,
+        },
+      };
+      if (x == "") {
+        if (orient == Orientation.VERTICAL)
+          trace["y"] = this.props.df.toArray(y);
+        else trace["x"] = this.props.df.toArray(y);
+      } else {
+        if (orient == Orientation.VERTICAL) {
+          trace["x"] = this.props.df.toArray(x);
+          trace["y"] = this.props.df.toArray(y);
+        } else {
+          trace["y"] = this.props.df.toArray(x);
+          trace["x"] = this.props.df.toArray(y);
+        }
+        trace["orientation"] = orient;
+      }
+      data.push(trace);
+    }
+
+    if (orient == Orientation.VERTICAL) {
+      layout["xaxis"] = { title: x, zeroline: false };
+      layout["yaxis"] = { title: y, zeroline: false };
+    } else {
+      layout["yaxis"] = { title: x, zeroline: false };
+      layout["xaxis"] = { title: y, zeroline: false };
+    }
+
+    return {
+      name: "plot",
+      data: data,
+      layout: layout,
+      config: config,
+    };
+  }
+}
